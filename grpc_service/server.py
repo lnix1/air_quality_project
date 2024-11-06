@@ -3,8 +3,8 @@ import grpc
 import paho.mqtt.client as mqtt
 from kafka import KafkaProducer
 import json
-import your_proto_file_pb2
-import your_proto_file_pb2_grpc
+import dustsensor_pb2
+import dustsensor_pb2_grpc
 import threading
 
 # Configuration for ThingSpeak's MQTT
@@ -21,11 +21,12 @@ KAFKA_TOPIC = "DustSensorTopic"
 # Initialize Kafka producer
 producer = KafkaProducer(
     bootstrap_servers=[KAFKA_BROKER_URL],
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+    security_protocol="SSL"
 )
 
 # gRPC service implementation
-class ThingSpeakServiceServicer(your_proto_file_pb2_grpc.ThingSpeakServiceServicer):
+class ThingSpeakServiceServicer(dustsensor_pb2_grpc.ThingSpeakServiceServicer):
     def __init__(self):
         pass  # No gRPC subscriber logic needed since we are producing directly to Kafka
 
